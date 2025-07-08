@@ -5,8 +5,10 @@ import appStore from './appStore.svg'
 import screenImage from './screenImage.svg'
 import profile from './profile.png'
 import fastshow from './FastShow.svg'
+import hi from './hi.webp'
 
 export const assets = {
+    hi,
     fastshow,
     logo,
     marvelLogo,
@@ -329,7 +331,7 @@ export const dummyBookingData = [
             showPrice: 59,
         },
         "amount": 147,
-        "bookedSeats": ["A1", "A2","A3"],
+        "bookedSeats": ["A1", "A2", "A3"],
         "isPaid": true,
     },
 ]

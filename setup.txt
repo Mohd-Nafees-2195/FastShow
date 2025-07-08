@@ -1,0 +1,29 @@
+Set Up the project using vite and dependency
+
+npm create vite@latest 
+ -project name - client //(or any name your choice)
+ -fremwork - react
+ -varient - javascript
+
+cd client  // replace client with your project name
+npm install
+
+npm install react-router-dom  // For routing
+npm install lucide-react   // For Icons
+npm install react-hot-toast //For popup message
+npm install react-player   //To play the videos
+
+npm run dev //to start the project
+
+1. //Add clerk for login, go to the clerk website and signUp with email mobile and google enabled
+ follow the steps in clerk and setup the environment
+link = https://dashboard.clerk.com/apps/app_2zY53iJdLvRkjUoxnw9b1ZAObAX/instances/ins_2zY53lEmwdfLuj3T7vtwjAogsVc
+//also enable the numlti settion 
+
+2. //Also Add text outfit from google font ans add it to index.css file
+link = https://fonts.google.com/selection/embed
+
+3. Also follow the steps on site and install, add TailWindCss 
+link = https://tailwindcss.com/docs/installation/using-vite
+
+
