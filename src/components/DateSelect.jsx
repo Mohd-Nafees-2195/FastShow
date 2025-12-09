@@ -10,11 +10,18 @@ const DateSelect=({dateTime,id})=>{
     const navigate=useNavigate();
     const [selectedDate, setSelectedDate]=useState(null);
 
+    // const onBookHandler=()=>{
+    //     if(!selectedDate){
+    //         return toast("Please select a date");
+    //     }
+    //     navigate(`/movies/${id}/${selectedDate}`);
+    //     scrollTo(0,0);
+    // }
     const onBookHandler=()=>{
         if(!selectedDate){
             return toast("Please select a date");
         }
-        navigate(`/movies/${id}/${selectedDate}`);
+        navigate(`/movies/timings/${id}/${selectedDate}`);
         scrollTo(0,0);
     }
 

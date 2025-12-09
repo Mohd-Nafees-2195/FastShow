@@ -14,6 +14,8 @@ import Dashboard from "./pages/admin/Dashboard";
 import AddShows from "./pages/admin/AddShows";
 import ListShows from "./pages/admin/ListShows";
 import ListBookings from "./pages/admin/ListBookings";
+import Timings from "./pages/Timings";
+import Loadings from "./pages/Loadings";
 
 const App = () => {
   const isAdminRoute = useLocation().pathname.startsWith("/admin");
@@ -26,8 +28,10 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/movies" element={<Movies />} />
         <Route path="/movies/:id" element={<MovieDetails />} />
-        <Route path="/movies/:id/:date" element={<SeatLayout />} />
+        <Route path="/movies/layout/:id/:time" element={<SeatLayout />} />
+        <Route path="/movies/timings/:id/:date" element={<Timings />} />
         <Route path="/my-bookings" element={<MyBookings />} />
+        <Route path="/loadings/:ids" element={<Loadings />} />
         <Route path="/favorite" element={<Favorite />} />
 
         <Route path="/admin/*" element={<Layout/>}>
