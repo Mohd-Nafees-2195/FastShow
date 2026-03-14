@@ -25,6 +25,7 @@ const City=({ isOpen, onCitySelect })=>{
     if (selectedCity) {
      console.log(selectedCity+' second')
       onCitySelect(selectedCity);
+      localStorage.setItem("selectedCity", selectedCity);
     //   isOpen(selectedCity);
     }
   };

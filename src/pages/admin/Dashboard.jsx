@@ -1,14 +1,16 @@
-import { ChartLineIcon, CircleDollarSignIcon, PlayCircleIcon, StarIcon, UsersIcon } from "lucide-react";
+import { ChartLineIcon, CircleDollarSignIcon, PlayCircleIcon, StarIcon, Theater, UsersIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { dummyDashboardData } from "../../assets/assets";
 import Loading from "../../components/Loading";
 import Title from "../../components/admin/Title";
 import BlurCircle from "../../components/BlurCircle";
 import { dateFormat } from "../../lib/dateFormat";
+import axiosInstance from "../../lib/axiosInstance";
 
 const Dashboard=()=>{
 
    const currency=import.meta.env.VITE_CURRENCY;
+   const user=JSON.parse(localStorage.getItem("user"));
 
    const [dashboardData,setDashboardData]=useState({
       totalBookings:0,
@@ -27,7 +29,15 @@ const Dashboard=()=>{
    ];
 
    const fetchDashboardData=async()=>{
-      setDashboardData(dummyDashboardData);
+      axiosInstance.get("/theatres/data/"+user.id).then(
+         response=>{
+            console.log(response.data.theatres,"nafees");
+            // localStorage.setItem("theaterInfo",JSON.stringify(response.data.theatres));
+            // localStorage.setItem("screenInfo",response.data.theatres.screens);
+         }).then(error=>{
+
+         })
+      setDashboardData(dummyDashboardData); //Abhi code change karna hai yha, still using summy data
       setLoading(false);
    };
 

@@ -3,29 +3,32 @@ import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 
-const Loadings=()=>{
+const Checkout=()=>{
 
+    const user=localStorage.getItem("user");
+    const currUser = user ? JSON.parse(user) : null;
     const {ids}=useParams();
     const navigate=useNavigate();
     const bookingPayload={
-        "userId":1,
+        "userId":currUser.id,
         "showSheetIds":ids.split(",").map(s => Number(s.trim())),
         "paymentMode":0
     }
 
     const getPaymentLonk=async ()=>{
         try{
-            const bookingResult=await axios.post("http://localhost:8080/tickets",bookingPayload);
+            const bookingResult=await axios.post("http://localhost:8080/tickets/book",bookingPayload);
             //console.log(bookingResult.data);
             const paymentPayload={"bookingId":bookingResult.data.id}
             const paymentLink=await axios.post("http://localhost:8080/payment/stripe/createPaymentLink",paymentPayload);
             //console.log(paymentLink.data);
-            // navigate(paymentLink.data.url)
-            window.open(paymentLink.data.url, "_blank", "noopener,noreferrer");
+            // navigate(paymentLink.data.url);
+            window.open(paymentLink.data.url, "_self", "noopener,noreferrer");
             //Now start from -> After payment suuccessfull redirect to the my-booking page, for that add that url while payment link creation
 
         }catch(error){
-           return toast("Something went wrong , Plaese Try Again")
+            toast("Something went wrong , Plaese Try Again")
+            navigate('/');
         }
     }
 
@@ -44,4 +47,4 @@ const Loadings=()=>{
     )
 }
 
-export default Loadings
+export default Checkout

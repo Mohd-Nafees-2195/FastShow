@@ -5,18 +5,31 @@ import BlurCircle from "../components/BlurCircle";
 import timeFormat from "../lib/timeFormat";
 import { dateFormat } from "../lib/dateFormat";
 import toast from 'react-hot-toast'
+import { useParams } from "react-router-dom";
+import axiosInstance from "../lib/axiosInstance";
 
 const MyBookings = () => {
 
   const currency=import.meta.env.VITE_CURRENCY;
 
+  const {id}=useParams(); //Use this id and fetch all tickets of user
+
   const [bookings,setBookings]=useState([]);
   const [isLoading,setIsLoading]=useState(true);
   
   const getMyBookings=async()=>{
-    setBookings(dummyBookingData);
-    setIsLoading(false);
-  }
+    // console.log(id);
+    // setBookings(dummyBookingData);
+      axiosInstance.get(`/tickets/${id}`).
+            then(response=>{
+              console.log(response.data.bookings);
+              setBookings(response.data.bookings);
+            }).then(errro=>{
+              console.error();
+              
+            })
+      setIsLoading(false);
+    }
 
   useEffect(()=>{
     getMyBookings();
@@ -35,7 +48,7 @@ const MyBookings = () => {
         <div key={index} className="flex flex-col md:flex-row justify-between 
           bg-primary/8 border border-primary/20 rounded-lg mt-4 p-2 max-w-3xl">
             <div className="flex flex-col md:flex-row">
-              <img src={item.show.movie.poster_path} alt="" className="md:max-w-45 
+              <img src={item.show.movie.imagesUrl} alt="" className="md:max-w-45 
                aspect-video h-auto object-cover object-bottom rounded"/>
                <div className="flex flex-col p-4">
                 <p className="text-lg font-semibold">{item.show.movie.title}</p>
@@ -43,7 +56,7 @@ const MyBookings = () => {
                   {timeFormat(item.show.movie.runtime)}
                 </p>
                 <p className="text-gray-400 text-sm  mt-auto">
-                  {dateFormat(item.show.showDateTime)}
+                  {dateFormat(item.show.startTime)}
                 </p>
                </div>
             </div>
@@ -61,10 +74,11 @@ const MyBookings = () => {
 
               <div className="text-sm">
                 <p><span className="text-gray-400">Total Tickets:</span>
-                 {item.bookedSeats.length}
+                 {item.showSeats.length}
                 </p>
                 <p><span className="text-gray-400">Seat Number:</span>
-                 {item.bookedSeats.join(", ")}
+                 {item.showSeats.map(s => s.number || "").join(", ")}
+                 {/* {item.showSeats.join(", ")} */}
                 </p>
               </div>
             </div>

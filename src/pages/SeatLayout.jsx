@@ -65,10 +65,14 @@ const SeatLayout = () => {
         {showSheet.map((seat,index)=>{
           const seatId=`${row}${index+1}`;
           // const seatName=`${row}${index+1}`;
+          console.log(seatId,"-",seat);
           return (
             <button key={seat.id} onClick={()=>handleSeatClick(seat.id)} 
+             disabled={seat.showSheetStatus !== "AVAILABLE"}
              className={`h-8 w-8 rounded border border-primary/60 cursor-pointer 
-              ${selectedSeats.includes(seat.id) && "bg-primary text-white"}`}>
+              ${selectedSeats.includes(seat.id) && "bg-primary text-white"}
+              ${seat.showSheetStatus==="AVAILABLE" ? "" :"bg-gray-400 cursor-not-allowed"} 
+              `}>
                 {seatId}
             </button>
           )
@@ -81,10 +85,20 @@ const SeatLayout = () => {
       if(selectedSeats.length==0){
         return toast("Please Select Al-least one seat");
       }
-      navigate('/loadings/'+selectedSeats);
+      navigate('/checkout/'+selectedSeats);
+  }
+
+  //Validating user 
+  const validateUser=()=>{
+    const user=localStorage.getItem("user");
+    const currUser = user ? JSON.parse(user) : null;
+    if(currUser==null){
+      navigate('/login');
+    }
   }
 
   useEffect(()=>{
+    validateUser();
     getShow();
   },[])
 
