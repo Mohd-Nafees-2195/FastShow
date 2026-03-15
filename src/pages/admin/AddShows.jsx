@@ -5,6 +5,7 @@ import Title from "../../components/admin/Title";
 import {CheckIcon, DeleteIcon, StarIcon} from 'lucide-react'
 import { kConverter } from "../../lib/kConvertor";
 import axiosInstance from "../../lib/axiosInstance";
+import toast from "react-hot-toast";
 
 const AddShows=()=>{
 
@@ -26,6 +27,9 @@ const [screenInfo,setScreenInfo]=useState([]);
 
 const [theatreId,setTheaterId]=useState(null);
 const [screenId,setScreenId]=useState(null);
+const [showSeats,setShowSeats]=useState(null);
+const [showFeatures,setShowFeatures]=useState(null);
+
 // const [loading, setLoading]=useState(true);
 
    const fetchTheaterInfo=async()=>{
@@ -56,6 +60,18 @@ const [screenId,setScreenId]=useState(null);
    // setNowPlayingMovies(dummyShowsData);
 
  }
+
+ const fetchScreenSeats=async(screenId1)=>{
+   //Fetch screen from bacend 
+   axiosInstance.get("/screens/" + screenId1).then(
+      response=>{
+         setShowSeats(response.data.screen.seats);
+         setShowFeatures(response.data.screen.features);
+         console.log(response.data.screen,"Screen Data");
+      }).then(error=>{
+         console.error();
+      })
+   }
 
  //Show timing selection section
  const handleDateTimeAdd=()=>{
@@ -96,7 +112,7 @@ const handleTheatreChange = async (e) => {
     setScreenInfo([]);
     return;
   }
-  console.log(theatreId1,"hi");
+//   console.log(theatreId1,"hi");
   setTheaterId(theatreId1);
 //   payLoad.theatreId=theatreId1;
   //Get List of screen form theater and setScreenInfo 
@@ -109,28 +125,83 @@ const handleTheatreChange = async (e) => {
   })
 };
 
-const handleScreenChange= async (e)=>{
+const handleScreenChange = async (e)=>{
    const screenId1=e.target.value;
    if(!screenId1){
       return;
    }
-   // payLoad.screenId=screenId;
+   console.log("Screen Data");
    setScreenId(screenId1);
+   fetchScreenSeats(screenId1);
 }
 
 const handleOnClick=()=>{
    // console.log(payLoad.theatreId);
 
-   const payLoad={
+   let show={
    screenId:screenId,
    theatreId:theatreId,
    movieId:selectedMovie,
-   showTimings:dateTimeSelection,
+   showTimings:[] ,
    features:[],
    showSheets:[] //add show sheet using sheet price accordingly 
-   // start from here
+   //  start from here
  };
-   console.log(payLoad);
+
+ 
+
+  console.log(dateTimeSelection);
+  //COnverting dateTimeSelection to showTimings with start time and end time (2 hours after start time)
+   Object.entries(dateTimeSelection).forEach(([date, times]) => {
+      times.forEach(time => {
+         const startTime = new Date(`${date}T${time}`);//.toISOString();
+         //  const endTime = new Date(startTime.getTime() + 2 * 60 * 60 * 1000).toISOString();
+         const endTime = new Date(startTime);
+         endTime.setHours(endTime.getHours() + 2);
+
+         let showTiming = {
+            startTime: startTime,
+            endTime: endTime,
+         }
+         show.showTimings.push(showTiming);
+      });
+   });
+
+   //Adding Show Seats with price according to seat type
+   showSeats.map((seat)=>{
+      let newShowSheet={
+         seatId:seat.id,
+         price:0,
+         number:seat.number,
+         showSheetStatus:"AVAILABLE",
+         seatType:seat.seatType
+      }
+      if(seat.seatType==="SILVER"){
+         newShowSheet.price=showPriceOfSilver;
+      }else if(seat.seatType==="GOLD"){
+         newShowSheet.price=showPriceOfGold;
+      }else if(seat.seatType==="PLATINUM"){
+         newShowSheet.price=showPriceOfPlatinum;
+      }
+      show.showSheets.push(newShowSheet);
+  })
+    
+
+   // console.log(showSeats);
+   console.log(show);
+   const payload={
+      show:show,
+   }
+   //Add show to backend
+   axiosInstance.post("/shows",payload).then(
+      response=>{
+         console.log(response.data);
+         toast.success("Show Added Successfully");
+      }
+   ).catch(error=>{
+      console.error(error);
+      toast.error("Failed to add show");
+   });
 }
 
 

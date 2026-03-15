@@ -19,6 +19,7 @@ import Loadings from "./pages/Checkout";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import Checkout from "./pages/Checkout";
+import AddResources from "./pages/admin/AddResources";
 
 const App = () => {
   const isAdminRoute = useLocation().pathname.startsWith("/admin");
@@ -44,6 +45,7 @@ const App = () => {
          <Route path="add-shows" element={<AddShows/>}/>
          <Route path="list-shows" element={<ListShows/>}/>
          <Route path="list-bookings" element={<ListBookings/>}/>
+         <Route path="add-resources" element={<AddResources/>}/>
         </Route>
       </Routes>
       {!isAdminRoute && <Footer />}

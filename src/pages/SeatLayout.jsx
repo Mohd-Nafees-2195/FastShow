@@ -27,22 +27,16 @@ const SeatLayout = () => {
     axios.get('http://localhost:8080/shows/'+id) 
     .then(response => {
             if(response.data.show){
-              //console.log(response.data.show.showSheets);
-              // setShow(response.data.show);
               setShowSheets(getShowSheet(response.data.show.showSheets));
-              // console.log(getShowSheet(response.data.show.showSheets));
+              console.log(response.data.show.showSheets);
             }
         })
         .catch(error => {
-            // console.error('Error fetching data:', error);
             toast("Invalid show");
         });
   }
 
   const handleSeatClick=(seatId)=>{
-    // if(!selectedTime){
-    //   return toast("Please Select Time First");
-    // }
     if(!selectedSeats.includes(seatId)&&selectedSeats.length>4){
       return toast("You can select 5 seats max");
     }
@@ -52,20 +46,10 @@ const SeatLayout = () => {
   const renderSeates=(row,showSheet)=>(
     <div key={row} className="flex gap-2 mt-2">
       <div className="flex flex-wrap items-center justify-center gap-2">
-        {/* {Array.from({length:showSheet},(_, i)=>{
-          const seatId=`${row}${showSheet.id}`;
-          return (
-            <button key={seatId} onClick={()=>handleSeatClick(seatId)} 
-             className={`h-8 w-8 rounded border border-primary/60 cursor-pointer 
-              ${selectedSeats.includes(seatId) && "bg-primary text-white"}`}>
-                {seatId}
-            </button>
-          )
-        })} */}
         {showSheet.map((seat,index)=>{
           const seatId=`${row}${index+1}`;
           // const seatName=`${row}${index+1}`;
-          console.log(seatId,"-",seat);
+          // console.log(seatId,"-",seat);
           return (
             <button key={seat.id} onClick={()=>handleSeatClick(seat.id)} 
              disabled={seat.showSheetStatus !== "AVAILABLE"}
@@ -118,7 +102,7 @@ const SeatLayout = () => {
           {/* For front seats */}
           <div className="grid grid-cols-2 md:grid-cols-1 gap-8 md:gap-2 mb-6">
             {/* {groupRows[0].map((row,index)=>renderSeates(row,showSheets[index]))} */}
-            {showSheets["silver"].length>0 ? renderSeates("A",showSheets["silver"]):toast("No Sheets available")}
+            {showSheets["silver"].length>0 && renderSeates("A",showSheets["silver"])}
           </div>
 
           <div className="grid grid-cols-2 gap-11">
